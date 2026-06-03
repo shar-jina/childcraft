@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --font-atkinson: "Atkinson Hyperlegible Next", sans-serif;
+  --color-primary: #0A5C96;
+  --color-primary-hover: #074775;
+  --color-primary-menus: #0A5C96;
+  --color-accent: #0284C7;
+  --color-brand-bg: #F0F9FF;
+}
+
+body {
+  font-family: var(--font-atkinson);
+}
