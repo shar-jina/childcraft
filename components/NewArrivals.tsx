@@ -165,6 +165,7 @@ const bookData: Record<string, Book[]> = {
 const NewArrivals = () => {
     const [selectedClass, setSelectedClass] = useState<string>("Std 1");
     const [selectedBookIndex, setSelectedBookIndex] = useState<number>(0);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
     const currentBooks = bookData[selectedClass] || [];
     const activeBook = currentBooks[selectedBookIndex] || currentBooks[0];
@@ -179,7 +180,7 @@ const NewArrivals = () => {
     };
 
     return (
-        <section className="w-full py-16 md:py-24 bg-gradient-to-b from-white to-gray-50 overflow-hidden" id="homepage-arrivals">
+        <section className="w-full py-16 md:py-24 bg-gradient-to-b from-[#053c60] via-[#043354] to-[#021F35] overflow-hidden" id="homepage-arrivals">
             <style jsx>{`
                 .book-shelf-container {
                     perspective: 1200px;
@@ -188,16 +189,31 @@ const NewArrivals = () => {
                     transform-style: preserve-3d;
                     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
                 }
+                .shelf-book.active {
+                    transform: rotateY(-24deg) rotateX(8deg) translateZ(24px) translateY(-16px);
+                    z-index: 30;
+                    opacity: 1;
+                }
+                .shelf-book.inactive {
+                    transform: rotateY(0deg) rotateX(0deg) translateZ(0) translateY(0);
+                    z-index: 10;
+                    opacity: 0.65;
+                }
+                .shelf-book.inactive:hover {
+                    transform: rotateY(-15deg) rotateX(4deg) translateZ(12px) translateY(-6px);
+                    z-index: 20;
+                    opacity: 0.9;
+                }
             `}</style>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-12">
                 {/* Heading */}
                 <div className="text-center mb-12">
-                    <span className="text-xs md:text-sm font-bold tracking-widest text-primary uppercase mb-3 block">Textbook Showcase</span>
-                    <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4 tracking-tight">
-                        New <span className="text-primary">Arrivals</span>
+                    <span className="text-xs md:text-sm font-bold tracking-widest text-sky-300 uppercase mb-3 block">Textbook Showcase</span>
+                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                        New <span className="text-sky-300">Arrivals</span>
                     </h2>
-                    <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto font-light">
+                    <p className="text-base md:text-lg text-slate-200 max-w-2xl mx-auto font-light">
                         Explore our latest publications grouped by curriculum boards and standards.
                     </p>
                 </div>
@@ -213,8 +229,8 @@ const NewArrivals = () => {
                             }}
                             className={`px-6 py-3 rounded-full text-sm font-bold transition-all shrink-0 shadow-sm border ${
                                 selectedClass === cls
-                                    ? "bg-primary text-white border-primary shadow-md"
-                                    : "bg-white text-slate-700 border-gray-100 hover:border-primary/20 hover:text-primary"
+                                    ? "bg-sky-400 text-white border-sky-400 shadow-md"
+                                    : "bg-white/10 text-white border-white/10 hover:bg-white/20 hover:text-sky-200"
                             }`}
                         >
                             {cls}
@@ -227,24 +243,24 @@ const NewArrivals = () => {
                     {/* Left side: Book details */}
                     <div className="flex flex-col text-left space-y-6 md:pr-8">
                         <div className="flex items-center gap-2">
-                            <span className="px-3 py-1.5 rounded-full bg-brand-bg text-primary font-bold text-xs uppercase tracking-wider border border-blue-100">
+                            <span className="px-3 py-1.5 rounded-full bg-sky-500/20 text-sky-300 font-bold text-xs uppercase tracking-wider border border-sky-400/20">
                                 {selectedClass}
                             </span>
-                            <span className="px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 font-semibold text-xs uppercase tracking-wider">
+                            <span className="px-3 py-1.5 rounded-full bg-white/10 text-slate-200 font-semibold text-xs uppercase tracking-wider">
                                 {activeBook.syllabus}
                             </span>
                         </div>
-                        <h3 className="text-2xl sm:text-4xl font-extrabold text-gray-900 leading-tight transition-all duration-300">
+                        <h3 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight transition-all duration-300">
                             {selectedClass} - {activeBook.title}
                         </h3>
-                        <p className="text-sm sm:text-base text-gray-600 leading-relaxed font-light min-h-[80px]">
+                        <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-light min-h-[80px]">
                             {activeBook.description}
                         </p>
                         <div className="pt-4 flex flex-wrap gap-3">
-                            <button className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-bold rounded-xl shadow-md transition-all hover:-translate-y-0.5 text-sm sm:text-base">
+                            <button className="px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl shadow-md transition-all hover:-translate-y-0.5 text-sm sm:text-base">
                                 Request Specimen Copy
                             </button>
-                            <button className="px-6 py-3 border border-gray-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl transition-all text-sm sm:text-base">
+                            <button className="px-6 py-3 border border-white/25 hover:bg-white/10 text-white font-bold rounded-xl transition-all text-sm sm:text-base">
                                 View Index Structure
                             </button>
                         </div>
@@ -253,36 +269,68 @@ const NewArrivals = () => {
                     {/* Right side: 3D Bookshelf */}
                     <div className="book-shelf-container relative w-full h-[220px] sm:h-[280px] md:h-[340px] flex flex-col justify-end">
                         {/* Books Wrapper */}
-                        <div className="relative w-full h-full">
+                        <div className="relative w-full h-full" style={{ perspective: "1000px", transformStyle: "preserve-3d" }}>
                             {currentBooks.map((book, idx) => {
                                 const isActive = selectedBookIndex === idx;
+                                const isHovered = hoveredIndex === idx;
                                 return (
                                     <div
                                         key={book.id}
                                         onClick={() => setSelectedBookIndex(idx)}
-                                        style={getPositionStyle(idx, currentBooks.length)}
-                                        className={`absolute w-12 h-16 sm:w-16 sm:h-22 md:w-22 md:h-30 lg:w-26 lg:h-36 shelf-book cursor-pointer ${
-                                            isActive
-                                                ? "bottom-4 scale-110 md:scale-120 z-30 opacity-100"
-                                                : "bottom-1 scale-90 z-10 opacity-65 hover:opacity-90 hover:scale-95"
-                                        }`}
+                                        onMouseEnter={() => setHoveredIndex(idx)}
+                                        onMouseLeave={() => setHoveredIndex(null)}
+                                        style={{
+                                            ...getPositionStyle(idx, currentBooks.length),
+                                            transform: isActive 
+                                                ? "translateY(-16px) scale(1.08)"
+                                                : isHovered
+                                                    ? "translateY(-6px) scale(1.02)"
+                                                    : "translateY(0) scale(0.92)",
+                                            opacity: isActive ? 1 : isHovered ? 0.9 : 0.65,
+                                            zIndex: isActive ? 30 : isHovered ? 20 : 10,
+                                        }}
+                                        className="absolute w-12 h-16 sm:w-16 sm:h-22 md:w-22 md:h-30 lg:w-26 lg:h-36 shelf-book cursor-pointer bottom-2"
                                     >
-                                        {/* The 3D Book Layout */}
-                                        <div className={`w-full h-full relative shadow-2xl rounded-r-md overflow-hidden bg-white border-l border-white/20 transition-all ${
-                                            isActive ? "ring-2 ring-primary/45" : ""
-                                        }`}>
-                                            <Image
-                                                src={book.image}
-                                                alt={book.title}
-                                                fill
-                                                className="object-cover"
-                                                sizes="(max-width: 768px) 25vw, 15vw"
-                                                priority={idx === 0}
-                                            />
-                                            {/* Dynamic spine highlight effect */}
-                                            <div className="absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/25 via-transparent to-black/10 z-10"></div>
-                                            {/* Sheen effect */}
-                                            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent z-15 pointer-events-none"></div>
+                                        {/* The 3D Book Layout with Pages Thickness */}
+                                        <div 
+                                            className="w-full h-full relative" 
+                                            style={{ 
+                                                transformStyle: "preserve-3d",
+                                                transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                                                transform: isActive
+                                                    ? "perspective(600px) rotateY(-25deg) rotateX(6deg) translateZ(12px)"
+                                                    : isHovered
+                                                        ? "perspective(600px) rotateY(-15deg) rotateX(4deg) translateZ(6px)"
+                                                        : "perspective(600px) rotateY(0deg) rotateX(0deg) translateZ(0)",
+                                            }}
+                                        >
+                                            {/* Front Cover */}
+                                            <div className={`absolute inset-0 shadow-2xl rounded-r-sm overflow-hidden bg-white border-l border-white/20 z-10 transition-all ${
+                                                isActive ? "ring-2 ring-primary/45" : ""
+                                            }`}>
+                                                <Image
+                                                    src={book.image}
+                                                    alt={book.title}
+                                                    fill
+                                                    className="object-cover"
+                                                    sizes="(max-width: 768px) 25vw, 15vw"
+                                                    priority={idx === 0}
+                                                />
+                                                {/* Dynamic spine highlight effect */}
+                                                <div className="absolute inset-y-0 left-0 w-2 bg-gradient-to-r from-black/25 via-transparent to-black/10 z-10"></div>
+                                                {/* Sheen effect */}
+                                                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent z-15 pointer-events-none"></div>
+                                            </div>
+
+                                            {/* Right Page Edge (3D Thickness) */}
+                                            <div 
+                                                className="absolute top-0 left-full h-full bg-slate-100 border-y border-r border-slate-200 origin-left z-5"
+                                                style={{
+                                                    width: "12px",
+                                                    transform: "rotateY(90deg)",
+                                                    backgroundImage: "repeating-linear-gradient(90deg, #cbd5e1, #cbd5e1 1px, #f8fafc 1px, #f8fafc 3px)",
+                                                }}
+                                            ></div>
                                         </div>
                                         {/* Real-looking drop shadow underneath the book */}
                                         <div className="absolute -bottom-4 left-2 right-2 h-2.5 bg-black/35 blur-md rounded-full transform rotateX(95deg) pointer-events-none"></div>

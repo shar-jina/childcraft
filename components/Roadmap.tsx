@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const milestones = [
     {
@@ -25,47 +25,108 @@ const milestones = [
 ];
 
 export default function Roadmap() {
+    const [isVisible, setIsVisible] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
+        }
+
+        return () => {
+            if (containerRef.current) {
+                observer.unobserve(containerRef.current);
+            }
+        };
+    }, []);
+
     return (
-        <section className="py-16 md:py-24 bg-slate-50 relative overflow-hidden" id="homepage-roadmap">
+        <section className="py-12 md:py-16 bg-gradient-to-b from-[#0A5C96] to-[#053c60] relative overflow-hidden" id="homepage-roadmap">
             {/* Decorative background gradients */}
-            <div className="absolute top-0 right-0 w-80 h-80 bg-blue-100/40 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-80 h-80 bg-sky-100/40 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
+            <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 w-80 h-80 bg-sky-200/5 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
 
             <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
                 {/* Title */}
-                <div className="text-center mb-16">
-                    <span className="text-xs md:text-sm font-bold tracking-widest text-primary uppercase mb-3 block">Our Growth Journey</span>
-                    <h2 className="text-3xl md:text-5xl font-bold text-gray-800 tracking-tight">
-                        Childcraft <span className="text-primary">Roadmap</span>
+                <div className="text-center mb-10">
+                    <span className="text-xs md:text-sm font-bold tracking-widest text-sky-300 uppercase mb-2 block">Our Growth Journey</span>
+                    <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight">
+                        Childcraft <span className="text-sky-300">Roadmap</span>
                     </h2>
-                    <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mt-4 font-light">
+                    <p className="text-sm md:text-base text-slate-200 max-w-2xl mx-auto mt-2 font-light">
                         Stepping stones of dedication, innovation, and educational excellence since inception.
                     </p>
                 </div>
 
-                {/* Timeline Grid */}
-                <div className="relative">
-                    {/* Center connector line for desktop */}
-                    <div className="hidden lg:block absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[4px] bg-slate-200 z-0">
-                        <div className="h-full bg-gradient-to-r from-primary to-blue-400 w-full rounded-full"></div>
-                    </div>
+                {/* Timeline Branch Container */}
+                <div ref={containerRef} className="relative max-w-4xl mx-auto">
+                    {/* Vertical Center Line */}
+                    <div 
+                        className="absolute left-[20px] lg:left-1/2 -translate-x-[2px] top-0 bottom-0 w-[4px] bg-gradient-to-b from-sky-400 via-blue-300 to-white rounded-full z-0 transition-transform duration-1000 origin-top"
+                        style={{
+                            transform: isVisible ? "scaleY(1)" : "scaleY(0)",
+                        }}
+                    ></div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 relative z-10">
-                        {milestones.map((milestone, idx) => (
-                            <div key={idx} className="group relative flex flex-col items-center text-center lg:text-left lg:items-start h-full">
-                                {/* Connector Dot */}
-                                <div className="w-10 h-10 rounded-full bg-white border-4 border-primary flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300 z-10 mb-6 lg:mb-8 shrink-0">
-                                    <span className="w-3.5 h-3.5 rounded-full bg-primary animate-pulse"></span>
+                    {/* Timeline Milestones - compact space-y-6 */}
+                    <div className="space-y-6 relative z-10">
+                        {milestones.map((milestone, idx) => {
+                            const isEven = idx % 2 === 0;
+
+                            return (
+                                <div 
+                                    key={idx} 
+                                    className={`flex flex-col lg:flex-row items-start lg:items-center w-full relative transition-all duration-700 ease-out ${
+                                        isEven ? "lg:flex-row-reverse" : ""
+                                    }`}
+                                    style={{
+                                        opacity: isVisible ? 1 : 0,
+                                        transform: isVisible ? "translateY(0)" : "translateY(16px)",
+                                        transitionDelay: `${idx * 150}ms`,
+                                    }}
+                                >
+                                    {/* Card Block */}
+                                    <div className="w-full lg:w-[46%] pl-12 lg:pl-0">
+                                        <div className="bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/15 hover:bg-white/15 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 relative group">
+                                            <span className="text-2xl font-extrabold text-sky-300 block mb-1">{milestone.year}</span>
+                                            <h3 className="text-base font-bold text-white mb-1 group-hover:text-sky-200 transition-colors">{milestone.title}</h3>
+                                            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-light">{milestone.desc}</p>
+                                            
+                                            {/* Decorative indicator triangle for desktop */}
+                                            <div className={`hidden lg:block absolute top-1/2 -translate-y-1/2 w-0 h-0 border-y-8 border-y-transparent ${
+                                                isEven 
+                                                    ? "-left-3 border-r-8 border-r-white/10" 
+                                                    : "-right-3 border-l-8 border-l-white/10"
+                                            }`}></div>
+                                        </div>
+                                    </div>
+
+                                    {/* Center Dot */}
+                                    <div 
+                                        className={`absolute left-[20px] lg:left-1/2 -translate-x-1/2 top-7 lg:top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#053c60] border-4 border-sky-400 flex items-center justify-center shadow-md z-20 shrink-0 transition-all duration-500 ${
+                                            isVisible ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                                        }`}
+                                        style={{
+                                            transitionDelay: `${idx * 150}ms`,
+                                        }}
+                                    >
+                                        <span className="w-3 h-3 rounded-full bg-sky-300 animate-pulse"></span>
+                                    </div>
+
+                                    {/* Empty spacer block to maintain flex layout structure on desktop */}
+                                    <div className="hidden lg:block w-[46%]"></div>
                                 </div>
- 
-                                {/* Content Card */}
-                                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition-shadow duration-300 w-full flex-1 flex flex-col">
-                                    <span className="text-3xl font-extrabold text-primary/20 block mb-2">{milestone.year}</span>
-                                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">{milestone.title}</h3>
-                                    <p className="text-sm text-gray-600 leading-relaxed font-light flex-1">{milestone.desc}</p>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             </div>

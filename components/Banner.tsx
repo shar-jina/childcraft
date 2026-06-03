@@ -5,11 +5,11 @@ import Image from "next/image";
 
 const Banner = () => {
     const images = [
-
         "/images/banner3.png",
         "/images/banner222.png",
         "/images/banner45.png",
-
+        "/images/bookscover/std1term1.jpeg",
+        "/images/bookscover/std2sem2.jpeg",
     ];
 
     const [current, setCurrent] = useState(0);
@@ -83,7 +83,7 @@ const Banner = () => {
     };
 
     return (
-        <div className="relative w-full h-[480px] bg-sky-50 overflow-hidden flex items-center justify-center ">
+        <div className="relative w-full h-[480px] bg-gradient-to-br from-[#0A5C96] via-[#06395e] to-[#032640] overflow-hidden flex items-center justify-center ">
             {/* Perspective Container */}
             <div
                 className="relative w-full h-full flex items-center justify-center"

@@ -4,7 +4,7 @@ import React from "react";
 
 const AboutSection = () => {
     return (
-        <section className="w-full pt-16 pb-8 md:py-16 px-6 sm:px-12 bg-slate-50 relative overflow-hidden">
+        <section className="w-full pt-16 pb-8 md:py-16 px-6 sm:px-12 bg-white relative overflow-hidden">
 
             {/* Background Decorative Elements */}
             <div className="absolute top-0 left-0 w-64 h-64 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>

@@ -35,13 +35,13 @@ const Header = () => {
                         <Image
                             src="/images/Child Craft Logo.png"
                             alt="Child Craft Logo"
-                            width={45}
-                            height={45}
+                            width={55}
+                            height={55}
                             className="object-contain"
                         />
                         <div className="flex flex-col">
-                            <h1 className="text-lg sm:text-2xl font-extrabold tracking-wide text-black italic leading-none">CHILD CRAFT</h1>
-                            <p className="text-[8px] sm:text-[10px] font-medium tracking-wider text-gray-700 italic mt-0.5">HALLMARK PUBLISHERS (P) LTD</p>
+                            <h1 className="text-lg sm:text-2xl font-extrabold tracking-wider text-primary leading-none">CHILD CRAFT</h1>
+                            <p className="text-[8px] sm:text-[9px] font-semibold tracking-widest text-slate-500 uppercase mt-1">HALLMARK PUBLISHERS (P) LTD</p>
                         </div>
                     </Link>
                 </div>
@@ -132,11 +132,14 @@ const Header = () => {
                     <Image
                         src="/images/Child Craft Logo.png"
                         alt="Logo"
-                        width={35}
-                        height={35}
+                        width={40}
+                        height={40}
                         className="object-contain"
                     />
-                    <h1 className="text-sm font-bold text-black italic tracking-tight">CHILD CRAFT</h1>
+                    <div className="flex flex-col">
+                        <h1 className="text-sm font-extrabold text-primary tracking-wider leading-none">CHILD CRAFT</h1>
+                        <p className="text-[6px] font-semibold tracking-widest text-slate-500 uppercase mt-0.5">HALLMARK PUBLISHERS</p>
+                    </div>
                 </Link>
 
                 {/* Mobile Menu Button */}

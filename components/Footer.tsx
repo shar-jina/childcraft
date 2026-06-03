@@ -4,7 +4,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 export default function Footer() {
     return (
-        <footer className="bg-gray-900 text-gray-300 py-6 md:py-8">
+        <footer className="bg-[#011422] text-gray-300 py-6 md:py-8">
             <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 mb-8">
                     {/* Left: Logo & Company Name */}
@@ -35,7 +35,7 @@ export default function Footer() {
                     <div className="flex flex-col items-start md:pl-16">
                         <h4 className="text-base md:text-lg font-bold text-white mb-4 uppercase tracking-wider relative inline-block">
                             Quick Links
-                            <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-white rounded-full"></span>
+                            <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-sky-400 rounded-full"></span>
                         </h4>
                         <ul className="space-y-2 md:space-y-3 font-medium text-sm md:text-base">
                             <li>
@@ -66,7 +66,7 @@ export default function Footer() {
                     <div className="flex flex-col items-start">
                         <h4 className="text-base md:text-lg font-bold text-white mb-4 uppercase tracking-wider relative inline-block">
                             Contact Us
-                            <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-white rounded-full"></span>
+                            <span className="absolute -bottom-2 left-0 w-1/2 h-1 bg-sky-400 rounded-full"></span>
                         </h4>
                         <ul className="space-y-3 md:space-y-4 text-sm md:text-base">
                             <li className="flex items-start gap-3 md:gap-4 hover:text-white transition-colors">

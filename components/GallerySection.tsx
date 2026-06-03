@@ -10,22 +10,22 @@ const images = [
 
 export default function GallerySection() {
     return (
-        <section className="pt-10 md:pt-16 pb-8 md:py-24 bg-red-white">
+        <section className="pt-10 md:pt-16 pb-8 md:py-24 bg-gradient-to-br from-[#021F35] to-[#053c60] overflow-hidden">
             <div className="container mx-auto px-4 lg:px-8 max-w-7xl">
                 {/* Header Area */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4">
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-bold capitalize text-gray-900 mb-2">
+                        <h2 className="text-3xl md:text-4xl font-bold capitalize text-white mb-2">
                             Gallery
                         </h2>
-                        <p className="text-gray-600 text-sm md:text-base max-w-2xl">
+                        <p className="text-slate-200 text-sm md:text-base max-w-2xl font-light">
                             Explore a curated collection of our most significant achievements, successful projects, and memorable moments.
                             These moments reflect our commitment to excellence and the vibrant community that drives our success forward.
                         </p>
                     </div>
                     <Link
                         href="/gallery"
-                        className="hidden md:inline-flex items-center gap-2 text-primary font-medium  transition-colors group"
+                        className="hidden md:inline-flex items-center gap-2 text-sky-300 hover:text-sky-200 font-medium transition-colors group"
                     >
                         View More
                         <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@ export default function GallerySection() {
                     {images.map((src, index) => (
                         <div
                             key={index}
-                            className="relative w-full aspect-4/3 md:aspect-square overflow-hidden rounded-xl shadow-sm group"
+                            className="relative w-full aspect-4/3 md:aspect-square overflow-hidden rounded-xl shadow-2xl border border-white/10 group"
                         >
                             <Image
                                 src={src}
@@ -56,7 +56,7 @@ export default function GallerySection() {
                 <div className="mt-8 flex justify-center md:hidden">
                     <Link
                         href="/gallery"
-                        className="inline-flex items-center gap-2 text-primary font-medium  transition-colors group"
+                        className="inline-flex items-center gap-2 text-sky-300 hover:text-sky-200 font-medium transition-colors group"
                     >
                         View More
                         <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
