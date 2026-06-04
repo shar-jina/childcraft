@@ -13,6 +13,7 @@ const Banner = () => {
     ]);
 
     const [current, setCurrent] = useState(0);
+    const [isMobile, setIsMobile] = useState(true);
 
     const next = () =>
         setCurrent((prev) => (prev + 1) % images.length);
@@ -21,6 +22,16 @@ const Banner = () => {
         setCurrent((prev) =>
             prev === 0 ? images.length - 1 : prev - 1
         );
+
+    // Track screen size for responsive 3D spacing
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        handleResize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     // Fetch banners from backend
     useEffect(() => {
@@ -63,6 +74,8 @@ const Banner = () => {
         const isCenter = diff === 0;
         const isLeft = diff === -1;
         const isRight = diff === 1;
+        const isFarLeft = diff === -2;
+        const isFarRight = diff === 2;
 
         // Base styles for all items
         let styles: React.CSSProperties = {
@@ -85,14 +98,36 @@ const Banner = () => {
                 ...styles,
                 zIndex: 20,
                 opacity: 0.8,
-                transform: "translateX(-220px) scale(0.8) rotateY(35deg)",
+                transform: isMobile 
+                    ? "translateX(-90px) scale(0.75) rotateY(25deg)" 
+                    : "translateX(-200px) scale(0.85) rotateY(30deg)",
             };
         } else if (isRight) {
             styles = {
                 ...styles,
                 zIndex: 20,
                 opacity: 0.8,
-                transform: "translateX(220px) scale(0.8) rotateY(-35deg)",
+                transform: isMobile 
+                    ? "translateX(90px) scale(0.75) rotateY(-25deg)" 
+                    : "translateX(200px) scale(0.85) rotateY(-30deg)",
+            };
+        } else if (isFarLeft) {
+            styles = {
+                ...styles,
+                zIndex: 15,
+                opacity: 0.5,
+                transform: isMobile 
+                    ? "translateX(-160px) scale(0.55) rotateY(35deg)" 
+                    : "translateX(-360px) scale(0.7) rotateY(40deg)",
+            };
+        } else if (isFarRight) {
+            styles = {
+                ...styles,
+                zIndex: 15,
+                opacity: 0.5,
+                transform: isMobile 
+                    ? "translateX(160px) scale(0.55) rotateY(-35deg)" 
+                    : "translateX(360px) scale(0.7) rotateY(-40deg)",
             };
         } else {
             // For items adjacent to left/right loop (seamless) or hidden
