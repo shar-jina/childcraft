@@ -40,13 +40,13 @@ const Header = () => {
                         <Image
                             src="/images/Child Craft Logo.png"
                             alt="Child Craft Logo"
-                            width={55}
-                            height={55}
+                            width={62}
+                            height={62}
                             className="object-contain"
                         />
-                        <div className="flex flex-col">
-                            <h1 className="text-lg sm:text-2xl font-extrabold tracking-wider text-primary leading-none">CHILD CRAFT</h1>
-                            <p className="text-[8px] sm:text-[9px] font-semibold tracking-widest text-slate-500 uppercase mt-1">HALLMARK PUBLISHERS (P) LTD</p>
+                        <div className="flex flex-col justify-center">
+                            <h1 className="text-lg sm:text-[20px] font-black tracking-wide text-[#0d2a4a] leading-tight">CHILD CRAFT</h1>
+                            <p className="text-lg sm:text-[20px] font-black tracking-wide text-[#0d2a4a] leading-tight">HALLMARK PUBLISHERS (P) LTD</p>
                         </div>
                     </Link>
                 </div>
@@ -165,13 +165,13 @@ const Header = () => {
                     <Image
                         src="/images/Child Craft Logo.png"
                         alt="Logo"
-                        width={40}
-                        height={40}
+                        width={46}
+                        height={46}
                         className="object-contain"
                     />
-                    <div className="flex flex-col">
-                        <h1 className="text-sm font-extrabold text-primary tracking-wider leading-none">CHILD CRAFT</h1>
-                        <p className="text-[6px] font-semibold tracking-widest text-slate-500 uppercase mt-0.5">HALLMARK PUBLISHERS</p>
+                    <div className="flex flex-col justify-center">
+                        <h1 className="text-[14px] sm:text-[15px] font-black text-[#0d2a4a] tracking-wide leading-tight">CHILD CRAFT</h1>
+                        <p className="text-[14px] sm:text-[15px] font-black text-[#0d2a4a] tracking-wide leading-tight">HALLMARK PUBLISHERS (P) LTD</p>
                     </div>
                 </Link>
 
