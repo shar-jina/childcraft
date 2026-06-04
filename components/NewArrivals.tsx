@@ -180,7 +180,7 @@ const NewArrivals = () => {
     };
 
     return (
-        <section className="w-full py-16 md:py-24 bg-gradient-to-b from-[#053c60] via-[#043354] to-[#021F35] overflow-hidden" id="homepage-arrivals">
+        <section className="w-full py-16 md:py-24 bg-linear-to-b from-blue-900 via-blue-950 to-slate-900 overflow-hidden" id="homepage-arrivals">
             <style jsx>{`
                 .book-shelf-container {
                     perspective: 1200px;

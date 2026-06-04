@@ -2,12 +2,17 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        setIsLoggedIn(!!localStorage.getItem("adminToken"));
+    }, [pathname]);
 
 
     const menuItems = ['Home', 'About', 'Career', 'Gallery', 'Contact'];
@@ -105,8 +110,36 @@ const Header = () => {
                     </ul>
                 </nav>
 
-                {/* Right Side - Logos Only */}
+                {/* Right Side - Logos & Admin Portal */}
                 <div className="hidden lg:flex flex-1 justify-end items-center gap-3">
+                    {isLoggedIn ? (
+                        <>
+                            <Link
+                                href="/admin"
+                                className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary border border-primary/20 hover:bg-primary/5 rounded-xl transition-all mr-1"
+                            >
+                                Dashboard
+                            </Link>
+                            <button
+                                onClick={() => {
+                                    localStorage.removeItem("adminToken");
+                                    localStorage.removeItem("adminUser");
+                                    setIsLoggedIn(false);
+                                    window.location.href = "/";
+                                }}
+                                className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-rose-600 hover:text-rose-700 border border-rose-200 hover:border-rose-350 hover:bg-rose-50 rounded-xl transition-all mr-2"
+                            >
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <Link
+                            href="/admin"
+                            className="px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-600 hover:text-primary border border-slate-200 hover:border-primary rounded-xl transition-all mr-2"
+                        >
+                            Admin Portal
+                        </Link>
+                    )}
                     <Link href="/" className="group border-r pr-4 border-gray-100 last:border-0 last:pr-0 flex items-center">
                         <Image
                             src="/images/logo2.png"
@@ -196,6 +229,39 @@ const Header = () => {
                                 </li>
                             );
                         })}
+                        <li>
+                            {isLoggedIn ? (
+                                <div className="flex flex-col gap-2 pt-2 border-t border-gray-150">
+                                    <Link
+                                        href="/admin"
+                                        className="font-semibold uppercase text-xs tracking-wider block py-2 text-primary hover:text-primary-hover"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                    >
+                                        Dashboard
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            localStorage.removeItem("adminToken");
+                                            localStorage.removeItem("adminUser");
+                                            setIsLoggedIn(false);
+                                            setIsMobileMenuOpen(false);
+                                            window.location.href = "/";
+                                        }}
+                                        className="font-semibold uppercase text-xs tracking-wider block py-2 text-left text-rose-600 hover:text-rose-700"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/admin"
+                                    className="font-semibold uppercase text-xs tracking-wider block py-2 border-b text-primary border-primary/20 hover:text-primary-hover"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    Admin Portal
+                                </Link>
+                            )}
+                        </li>
                     </ul>
                 </div>
 

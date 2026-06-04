@@ -103,30 +103,30 @@ export default function CareerPage() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:shadow-md">
-                            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+                        <div className="p-8 rounded-2xl bg-linear-to-br from-blue-900 to-slate-900 border border-blue-800/20 text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div className="w-12 h-12 bg-white/10 text-sky-300 rounded-xl flex items-center justify-center mb-6">
                                 <FaPenNib className="w-5 h-5" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-3">Creative Freedom</h3>
-                            <p className="text-slate-600 text-sm leading-relaxed">
+                            <h3 className="text-xl font-bold text-white mb-3">Creative Freedom</h3>
+                            <p className="text-slate-300 text-sm leading-relaxed">
                                 We encourage innovative teaching models, bold graphic designs, and unique illustration styles.
                             </p>
                         </div>
-                        <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:shadow-md">
-                            <div className="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center mb-6">
+                        <div className="p-8 rounded-2xl bg-linear-to-br from-blue-900 to-slate-900 border border-blue-800/20 text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div className="w-12 h-12 bg-white/10 text-pink-300 rounded-xl flex items-center justify-center mb-6">
                                 <FaPaintBrush className="w-5 h-5" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-3">Legacy & Experience</h3>
-                            <p className="text-slate-600 text-sm leading-relaxed">
+                            <h3 className="text-xl font-bold text-white mb-3">Legacy & Experience</h3>
+                            <p className="text-slate-300 text-sm leading-relaxed">
                                 Work directly with veterans who have over 40 years of expertise in printing, publication, and curriculum development.
                             </p>
                         </div>
-                        <div className="p-8 rounded-2xl bg-slate-50 border border-slate-100 transition-all hover:shadow-md">
-                            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
+                        <div className="p-8 rounded-2xl bg-linear-to-br from-blue-900 to-slate-900 border border-blue-800/20 text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                            <div className="w-12 h-12 bg-white/10 text-emerald-300 rounded-xl flex items-center justify-center mb-6">
                                 <FaChalkboardTeacher className="w-5 h-5" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-800 mb-3">Direct Impact</h3>
-                            <p className="text-slate-600 text-sm leading-relaxed">
+                            <h3 className="text-xl font-bold text-white mb-3">Direct Impact</h3>
+                            <p className="text-slate-300 text-sm leading-relaxed">
                                 Your textbooks, visuals, and lesson guides will empower thousands of school children across the nation.
                             </p>
                         </div>

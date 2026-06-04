@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 
 const Banner = () => {
-    const images = [
+    const [images, setImages] = useState<string[]>([
         "/images/banner3.png",
         "/images/banner222.png",
         "/images/banner45.png",
         "/images/bookscover/std1term1.jpeg",
         "/images/bookscover/std2sem2.jpeg",
-    ];
+    ]);
 
     const [current, setCurrent] = useState(0);
 
@@ -22,11 +22,32 @@ const Banner = () => {
             prev === 0 ? images.length - 1 : prev - 1
         );
 
+    // Fetch banners from backend
+    useEffect(() => {
+        const fetchBanners = async () => {
+            try {
+                const res = await fetch("http://localhost:5001/api/banner");
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        const sortedImages = data
+                            .sort((a: any, b: any) => a.index - b.index)
+                            .map((item: any) => item.imageUrl);
+                        setImages(sortedImages);
+                    }
+                }
+            } catch (err) {
+                console.error("Failed to fetch banner images from backend:", err);
+            }
+        };
+        fetchBanners();
+    }, []);
+
     // Auto-slide
     useEffect(() => {
         const timer = setInterval(next, 5000);
         return () => clearInterval(timer);
-    }, [current]);
+    }, [current, images.length]);
 
     const getStyles = (index: number) => {
         // Handle circular index distance
@@ -83,7 +104,7 @@ const Banner = () => {
     };
 
     return (
-        <div className="relative w-full h-[480px] bg-gradient-to-br from-[#0A5C96] via-[#06395e] to-[#032640] overflow-hidden flex items-center justify-center ">
+        <div className="relative w-full h-[480px] bg-linear-to-br from-blue-900 via-blue-950 to-slate-900 overflow-hidden flex items-center justify-center ">
             {/* Perspective Container */}
             <div
                 className="relative w-full h-full flex items-center justify-center"

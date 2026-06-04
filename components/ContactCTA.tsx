@@ -3,7 +3,7 @@ import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
 
 export default function ContactCTA() {
     return (
-        <section className="py-10 md:py-16 bg-gradient-to-br from-[#021F35] to-[#043354] relative overflow-hidden">
+        <section className="py-10 md:py-16 bg-linear-to-br from-blue-900 via-blue-950 to-slate-900 relative overflow-hidden">
             {/* Decorative blobs */}
             <div className="absolute top-0 right-0 w-72 h-72 bg-sky-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob"></div>
             <div className="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000"></div>
@@ -32,24 +32,24 @@ export default function ContactCTA() {
                     </div>
 
                     {/* Quick Info Grid */}
-                    <div className="hidden md:block w-full lg:w-auto lg:min-w-[280px] bg-black/40 border border-white/10 rounded-2xl p-6 text-white shadow-2xl relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/10 rounded-full filter blur-2xl group-hover:bg-rose-500/20 transition-colors duration-500"></div>
-                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-500/10 rounded-full filter blur-2xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+                    <div className="hidden md:block w-full lg:w-auto lg:min-w-[280px] bg-linear-to-br from-pink-500/10 via-purple-500/10 to-indigo-500/10 border border-pink-500/20 rounded-2xl p-6 text-white shadow-2xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-pink-500/15 rounded-full filter blur-2xl group-hover:bg-pink-500/25 transition-colors duration-500"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/15 rounded-full filter blur-2xl group-hover:bg-purple-500/25 transition-colors duration-500"></div>
 
-                        <h3 className="text-lg font-bold mb-6 relative z-10 border-b border-white/10 pb-3">Quick Contact</h3>
+                        <h3 className="text-lg font-bold mb-6 relative z-10 border-b border-pink-500/20 pb-3">Quick Contact</h3>
 
                         <ul className="space-y-4 relative z-10">
                             <li className="flex items-center gap-4 group/item">
-                                <span className="bg-white/10 p-2.5 rounded-xl text-sky-300 group-hover/item:scale-110 group-hover/item:bg-white/20 transition-all">
+                                <span className="bg-white/10 p-2.5 rounded-xl text-pink-300 group-hover/item:scale-110 group-hover/item:bg-white/20 transition-all">
                                     <FaEnvelope className="w-4 h-4" />
                                 </span>
                                 <div>
                                     <p className="text-[10px] text-slate-300 uppercase tracking-wider font-semibold mb-0.5">Email Us</p>
-                                    <p className="text-xs font-medium hover:text-sky-300 transition-colors cursor-pointer">info@childcraftbooks.com</p>
+                                    <p className="text-xs font-medium hover:text-pink-300 transition-colors cursor-pointer">info@childcraftbooks.com</p>
                                 </div>
                             </li>
                             <li className="flex items-center gap-4 group/item">
-                                <span className="bg-white/10 p-2.5 rounded-xl text-sky-300 group-hover/item:scale-110 group-hover/item:bg-white/20 transition-all">
+                                <span className="bg-white/10 p-2.5 rounded-xl text-pink-300 group-hover/item:scale-110 group-hover/item:bg-white/20 transition-all">
                                     <FaMapMarkerAlt className="w-4 h-4" />
                                 </span>
                                 <div>

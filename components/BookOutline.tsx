@@ -109,20 +109,20 @@ const BookOutline = () => {
             {/* Stats Box Section - Full Width Container */}
             <div className="mt-20 w-full relative z-20">
                 {/* Visual Trick: bottom half has the background of the next section (dark blue [#053c60]) */}
-                <div className="absolute inset-x-0 bottom-0 top-1/2 bg-[#053c60]"></div>
+                <div className="absolute inset-x-0 bottom-0 top-1/2 bg-blue-900"></div>
 
                 <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
                     <div className="bg-white rounded-3xl shadow-xl p-8 border border-slate-100 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                         <div className="space-y-2">
-                            <h3 className="text-xl md:text-3xl font-bold text-primary">250+</h3>
+                            <h3 className="text-xl md:text-3xl font-bold text-primary">400+</h3>
                             <p className="text-gray-600 font-medium text-lg uppercase tracking-wide">Titles</p>
                         </div>
                         <div className="space-y-2 md:border-l md:border-r border-slate-100">
-                            <h3 className="text-xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">1200+</h3>
+                            <h3 className="text-xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">3000+</h3>
                             <p className="text-gray-600 font-medium text-lg uppercase tracking-wide">Schools</p>
                         </div>
                         <div className="space-y-2">
-                            <h3 className="text-xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500">15+</h3>
+                            <h3 className="text-xl md:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-yellow-500">12+</h3>
                             <p className="text-gray-600 font-medium text-lg uppercase tracking-wide">Years of Service</p>
                         </div>
                     </div>

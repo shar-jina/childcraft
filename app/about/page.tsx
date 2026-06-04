@@ -94,11 +94,12 @@ export default function AboutPage() {
 
             <Roadmap />
 
-            {/* CEO Message Section */}
-            <section className="py-12 md:py-16 bg-slate-900 text-white">
-                <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
+            {/* Leadership Messages Section */}
+            <section className="py-12 md:py-20 bg-slate-900 text-white">
+                <div className="container mx-auto px-4 lg:px-8 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                    {/* Managing Director Message */}
                     <div className="relative">
-                        <div className="absolute -inset-4 bg-linear-to-r from-blue-500 to-indigo-500 rounded-3xl blur-2xl opacity-20 hidden md:block"></div>
+                        <div className="absolute -inset-4 bg-linear-to-r from-pink-500 to-rose-500 rounded-3xl blur-2xl opacity-20 hidden md:block"></div>
                         <div className="relative bg-slate-800 p-6 md:p-8 rounded-3xl border border-slate-700 flex flex-col md:flex-row gap-6 items-center md:items-start">
                             {/* CEO Image Side */}
                             <div className="shrink-0">
@@ -109,22 +110,54 @@ export default function AboutPage() {
                                         fill
                                         className="object-cover"
                                     />
-
                                 </div>
                             </div>
 
                             {/* CEO Message Side */}
                             <div className="flex-1 text-center md:text-left">
-                                <div className="inline-block px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 font-semibold text-[10px] md:text-xs mb-3 md:mb-4 uppercase tracking-wider">
+                                <div className="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 font-semibold text-[10px] md:text-xs mb-3 md:mb-4 uppercase tracking-wider">
                                     Message from the CEO
                                 </div>
-                                <FaQuoteLeft className="text-xl md:text-2xl text-blue-500/30 mb-2 md:mb-3 mx-auto md:mx-0" />
+                                <FaQuoteLeft className="text-xl md:text-2xl text-pink-500/30 mb-2 md:mb-3 mx-auto md:mx-0" />
                                 <p className="text-slate-300 text-xs md:text-base leading-relaxed italic font-serif mb-4">
                                     "Education is the most powerful weapon which you can use to change the world. At Childcraft Hallmark Publishers, we don't just print books; we craft gateways to imagination, understanding, and the future. Our commitment to excellence is a promise to the next generation."
                                 </p>
                                 <div>
                                     <h4 className="font-bold text-white text-base md:text-lg">Mr. V. A. Vishwanathan</h4>
-                                    <p className="text-blue-400 font-medium tracking-wide text-[10px] md:text-xs uppercase mt-0.5">Managing Director</p>
+                                    <p className="text-pink-400 font-medium tracking-wide text-[10px] md:text-xs uppercase mt-0.5">Managing Director</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Director Message */}
+                    <div className="relative">
+                        <div className="absolute -inset-4 bg-linear-to-r from-pink-500 to-rose-500 rounded-3xl blur-2xl opacity-20 hidden md:block"></div>
+                        <div className="relative bg-slate-800 p-6 md:p-8 rounded-3xl border border-slate-700 flex flex-col md:flex-row gap-6 items-center md:items-start">
+                            {/* Director Image Side */}
+                            <div className="shrink-0">
+                                <div className="w-20 h-20 md:w-32 md:h-32 relative overflow-hidden rounded-full border-[3px] border-slate-700 shadow-lg">
+                                    <Image
+                                        src="/images/person2.PNG"
+                                        alt="Director Photo"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Director Message Side */}
+                            <div className="flex-1 text-center md:text-left">
+                                <div className="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 font-semibold text-[10px] md:text-xs mb-3 md:mb-4 uppercase tracking-wider">
+                                    Message from the Director
+                                </div>
+                                <FaQuoteLeft className="text-xl md:text-2xl text-pink-500/30 mb-2 md:mb-3 mx-auto md:mx-0" />
+                                <p className="text-slate-300 text-xs md:text-base leading-relaxed italic font-serif mb-4">
+                                    "Our mission is to create a dynamic learning ecosystem that bridges the gap between traditional curriculum and modern creative pedagogy. By equipping teachers and engaging children, we ensure that education remains an active, joyful journey of discovery."
+                                </p>
+                                <div>
+                                    <h4 className="font-bold text-white text-base md:text-lg">Mrs. Reena Vishwanathan</h4>
+                                    <p className="text-pink-400 font-medium tracking-wide text-[10px] md:text-xs uppercase mt-0.5">Director</p>
                                 </div>
                             </div>
                         </div>

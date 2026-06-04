@@ -50,7 +50,7 @@ export default function Roadmap() {
     }, []);
 
     return (
-        <section className="py-12 md:py-16 bg-gradient-to-b from-[#0A5C96] to-[#053c60] relative overflow-hidden" id="homepage-roadmap">
+        <section className="py-12 md:py-16 bg-linear-to-b from-blue-900 via-blue-950 to-slate-900 relative overflow-hidden" id="homepage-roadmap">
             {/* Decorative background gradients */}
             <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-80 h-80 bg-sky-200/5 rounded-full mix-blend-multiply filter blur-3xl opacity-30 pointer-events-none"></div>
@@ -112,7 +112,7 @@ export default function Roadmap() {
 
                                     {/* Center Dot */}
                                     <div 
-                                        className={`absolute left-[20px] lg:left-1/2 -translate-x-1/2 top-7 lg:top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-[#053c60] border-4 border-sky-400 flex items-center justify-center shadow-md z-20 shrink-0 transition-all duration-500 ${
+                                        className={`absolute left-[20px] lg:left-1/2 -translate-x-1/2 top-7 lg:top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-blue-950 border-4 border-sky-400 flex items-center justify-center shadow-md z-20 shrink-0 transition-all duration-500 ${
                                             isVisible ? "scale-100 opacity-100" : "scale-0 opacity-0"
                                         }`}
                                         style={{
