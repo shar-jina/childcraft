@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { API_BASE_URL } from "@/utils/api";
 
 export default function OfferBanner() {
     const [offers, setOffers] = useState<any[]>([]);
@@ -10,7 +11,7 @@ export default function OfferBanner() {
     useEffect(() => {
         const fetchActiveOffers = async () => {
             try {
-                const res = await fetch("http://localhost:5001/api/offer/active");
+                const res = await fetch(`${API_BASE_URL}/api/offer/active`);
                 if (res.ok) {
                     const data = await res.json();
                     setOffers(Array.isArray(data) ? data : data ? [data] : []);

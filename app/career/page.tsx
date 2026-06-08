@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import { FaPenNib, FaPaintBrush, FaChalkboardTeacher, FaRegEnvelope, FaUser, FaPhone, FaLink } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaPenNib, FaPaintBrush, FaChalkboardTeacher, FaRegEnvelope, FaUser, FaPhone, FaLink, FaBriefcase } from "react-icons/fa";
+import { API_BASE_URL } from "@/utils/api";
 
 interface Position {
+    id: string | number;
     title: string;
     department: string;
     type: string;
@@ -12,12 +14,11 @@ interface Position {
     icon: React.ReactNode;
 }
 
-const openPositions: Position[] = [
+const staticPositionsFallback = [
     {
         title: "Educational Content Developer",
         department: "Editorial & Content Development",
         type: "Full-Time / Hybrid",
-        icon: <FaPenNib className="w-6 h-6 text-blue-600" />,
         description: "Review and curate engaging educational content for school textbook series across CBSE, ICSE, and State boards.",
         requirements: [
             "Post-graduate/graduate degree in Education, English, Mathematics, or Science.",
@@ -29,7 +30,6 @@ const openPositions: Position[] = [
         title: "Graphic Designer & Children's Book Illustrator",
         department: "Creative & Book Design",
         type: "Full-Time (In-office)",
-        icon: <FaPaintBrush className="w-6 h-6 text-rose-600" />,
         description: "Design vibrant textbook cover pages, clean multi-column text layouts, and custom illustrations geared toward young learners.",
         requirements: [
             "Proficiency in Adobe InDesign, Photoshop, and Illustrator.",
@@ -41,7 +41,6 @@ const openPositions: Position[] = [
         title: "Academic Coordinator & Teacher Trainer",
         department: "Academic Support Services",
         type: "Full-Time (Requires Travel)",
-        icon: <FaChalkboardTeacher className="w-6 h-6 text-emerald-600" />,
         description: "Conduct training seminars for partner schools, coordinate implementation of our digital/printed content, and collect feedback.",
         requirements: [
             "Degree in education or relevant academic field with 2+ years teaching experience.",
@@ -51,8 +50,22 @@ const openPositions: Position[] = [
     }
 ];
 
+const getIcon = (department: string) => {
+    const dept = department.toLowerCase();
+    if (dept.includes("content") || dept.includes("editorial")) {
+        return <FaPenNib className="w-6 h-6 text-blue-600" />;
+    } else if (dept.includes("creative") || dept.includes("design") || dept.includes("art") || dept.includes("illustration")) {
+        return <FaPaintBrush className="w-6 h-6 text-rose-600" />;
+    } else if (dept.includes("academic") || dept.includes("support") || dept.includes("trainer") || dept.includes("teacher")) {
+        return <FaChalkboardTeacher className="w-6 h-6 text-emerald-600" />;
+    }
+    return <FaBriefcase className="w-6 h-6 text-sky-600" />;
+};
+
 export default function CareerPage() {
-    const [selectedPosition, setSelectedPosition] = useState<string>(openPositions[0].title);
+    const [positions, setPositions] = useState<Position[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [selectedPosition, setSelectedPosition] = useState<string>("");
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -61,6 +74,49 @@ export default function CareerPage() {
         coverLetter: ""
     });
     const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+
+    useEffect(() => {
+        const fetchPositions = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/positions`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.length > 0) {
+                        const mapped = data.map((pos: any) => ({
+                            id: pos._id,
+                            title: pos.title,
+                            department: pos.department,
+                            type: pos.type,
+                            description: pos.description,
+                            requirements: pos.requirements,
+                            icon: getIcon(pos.department)
+                        }));
+                        setPositions(mapped);
+                        setSelectedPosition(mapped[0].title);
+                        return;
+                    }
+                }
+                loadFallback();
+            } catch (err) {
+                console.error("Failed to fetch open positions, using fallback:", err);
+                loadFallback();
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        const loadFallback = () => {
+            const mapped = staticPositionsFallback.map((pos, idx) => ({
+                ...pos,
+                id: idx,
+                icon: getIcon(pos.department)
+            }));
+            setPositions(mapped);
+            setSelectedPosition(mapped[0].title);
+        };
+
+        fetchPositions();
+    }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -76,9 +132,9 @@ export default function CareerPage() {
     };
 
     return (
-        <main className="min-h-screen bg-white">
+        <main className="min-h-screen bg-white text-slate-800">
             {/* Hero Section */}
-            <section className="relative w-full py-16 md:py-24 bg-slate-50 flex items-center justify-center overflow-hidden">
+            <section className="relative w-full py-16 md:py-24 bg-slate-50 flex items-center justify-center overflow-hidden animate-fade-in">
                 {/* Decorative Blobs */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"></div>
                 <div className="absolute bottom-0 left-0 w-96 h-96 bg-rose-100/50 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000"></div>
@@ -90,7 +146,7 @@ export default function CareerPage() {
                     </h1>
                     <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed font-light">
                         At Child Craft Hallmark Publishers, we create resources that inspire and empower young minds. 
-                        If you are passionate about pedagogy, design, or supporting teachers, we'd love to work with you.
+                        If you are passionate about pedagogy, design, or supporting teachers, we&apos;d love to work with you.
                     </p>
                 </div>
             </section>
@@ -142,46 +198,58 @@ export default function CareerPage() {
                         <p className="text-slate-600 text-sm md:text-base mt-2">Find a role that fits your talents.</p>
                     </div>
 
-                    <div className="space-y-6">
-                        {openPositions.map((pos) => (
-                            <div key={pos.title} className="bg-white rounded-2xl border border-slate-100 p-6 md:p-8 transition-all hover:shadow-md flex flex-col md:flex-row gap-6 md:items-start">
-                                <div className="p-4 bg-slate-50 rounded-xl self-start">
-                                    {pos.icon}
-                                </div>
-                                <div className="flex-1 space-y-4">
-                                    <div>
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            <h3 className="text-xl font-bold text-slate-800">{pos.title}</h3>
-                                            <span className="px-2.5 py-1 text-xs font-semibold text-primary bg-brand-bg rounded-full uppercase">
-                                                {pos.type}
-                                            </span>
+                    {loading ? (
+                        <div className="flex justify-center items-center py-12">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                        </div>
+                    ) : positions.length === 0 ? (
+                        <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center">
+                            <p className="text-slate-500 font-light">No positions are currently open. Check back later!</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-6 animate-fade-in">
+                            {positions.map((pos) => (
+                                <div key={pos.id} className="bg-white rounded-2xl border border-slate-100 p-6 md:p-8 transition-all hover:shadow-md flex flex-col md:flex-row gap-6 md:items-start">
+                                    <div className="p-4 bg-slate-50 rounded-xl self-start">
+                                        {pos.icon}
+                                    </div>
+                                    <div className="flex-1 space-y-4">
+                                        <div>
+                                            <div className="flex flex-wrap items-center gap-3">
+                                                <h3 className="text-xl font-bold text-slate-800">{pos.title}</h3>
+                                                <span className="px-2.5 py-1 text-xs font-semibold text-primary bg-sky-50 rounded-full uppercase">
+                                                    {pos.type}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">{pos.department}</p>
                                         </div>
-                                        <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">{pos.department}</p>
+                                        <p className="text-slate-605 text-sm leading-relaxed">{pos.description}</p>
+                                        {pos.requirements && pos.requirements.length > 0 && (
+                                            <div>
+                                                <h4 className="text-xs font-bold uppercase text-slate-700 tracking-wider mb-2">Key Requirements:</h4>
+                                                <ul className="list-disc list-inside text-sm text-slate-600 space-y-1 pl-1">
+                                                    {pos.requirements.map((req, index) => (
+                                                        <li key={index}>{req}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
                                     </div>
-                                    <p className="text-slate-600 text-sm leading-relaxed">{pos.description}</p>
-                                    <div>
-                                        <h4 className="text-xs font-bold uppercase text-slate-700 tracking-wider mb-2">Key Requirements:</h4>
-                                        <ul className="list-disc list-inside text-sm text-slate-600 space-y-1 pl-1">
-                                            {pos.requirements.map((req, index) => (
-                                                <li key={index}>{req}</li>
-                                            ))}
-                                        </ul>
+                                    <div className="self-end md:self-start">
+                                        <button 
+                                            onClick={() => {
+                                                setSelectedPosition(pos.title);
+                                                document.getElementById("apply-form")?.scrollIntoView({ behavior: "smooth" });
+                                            }}
+                                            className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-lg shadow-sm transition-all"
+                                        >
+                                            Apply Now
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="self-end md:self-start">
-                                    <button 
-                                        onClick={() => {
-                                            setSelectedPosition(pos.title);
-                                            document.getElementById("apply-form")?.scrollIntoView({ behavior: "smooth" });
-                                        }}
-                                        className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-white text-sm font-bold rounded-lg shadow-sm transition-all"
-                                    >
-                                        Apply Now
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
 
@@ -274,8 +342,8 @@ export default function CareerPage() {
                                             onChange={(e) => setSelectedPosition(e.target.value)}
                                             className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm text-slate-800"
                                         >
-                                            {openPositions.map((pos) => (
-                                                <option key={pos.title} value={pos.title}>{pos.title}</option>
+                                            {positions.map((pos) => (
+                                                <option key={pos.id} value={pos.title}>{pos.title}</option>
                                             ))}
                                         </select>
                                     </div>

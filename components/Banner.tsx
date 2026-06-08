@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { API_BASE_URL } from "@/utils/api";
 
 const Banner = () => {
     const [images, setImages] = useState<string[]>([
@@ -37,7 +38,7 @@ const Banner = () => {
     useEffect(() => {
         const fetchBanners = async () => {
             try {
-                const res = await fetch("http://localhost:5001/api/banner");
+                const res = await fetch(`${API_BASE_URL}/api/banner`);
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data) && data.length > 0) {
