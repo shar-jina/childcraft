@@ -164,11 +164,108 @@ const staticBookDataFallback = {
     ],
 };
 
+const TEXTBOOK_CATEGORIES = [
+    {
+        name: "Core Series",
+        series: [
+            "Wings (S&T)",
+            "Pearls & Petals (S&T)",
+            "Nexus (T)",
+            "Nexus Plus (T)",
+            "Next Generation (T)",
+            "Golden Wings (T)",
+            "Green Planet"
+        ]
+    },
+    {
+        name: "Languages",
+        series: [
+            "Manjadi",
+            "Malayala Manjari",
+            "Basha Tarang",
+            "Lipi Sagaram",
+            "Hindi Praveshika",
+            "Sarovar 1-5",
+            "Madhuri Hindi Reader"
+        ]
+    },
+    {
+        name: "Grammar & English",
+        series: [
+            "Active Grammar 1-8",
+            "Basic Grammar",
+            "Graded English",
+            "Active English (Reader)"
+        ]
+    },
+    {
+        name: "Computers & GK",
+        series: [
+            "IT Exploring e-World",
+            "Smart Computer",
+            "World of Computer",
+            "GK - Fun & Facts",
+            "GK – Explore the World"
+        ]
+    },
+    {
+        name: "Writing & Art",
+        series: [
+            "Fun with Crayon",
+            "Sulekh Mala Handwriting",
+            "Vivanta",
+            "Capital and Small Letters",
+            "Magic of Art",
+            "Cursive Writing",
+            "Draw & Colour",
+            "Art & Activity",
+            "ABC Writing Capital and Small",
+            "Aalekhanamithram - Malayalam Writing"
+        ]
+    }
+];
+
+const generateFallbackBooksForSeries = (seriesName: string): Book[] => {
+    let count = 5;
+    if (seriesName.includes("1-8") || seriesName.includes("Explore the World") || seriesName.includes("Grammar")) {
+        count = 8;
+    } else if (seriesName.includes("1-5")) {
+        count = 5;
+    } else if (seriesName.includes("Petals") || seriesName.includes("Writing") || seriesName.includes("Praveshika")) {
+        count = 3;
+    }
+
+    const list: Book[] = [];
+    for (let i = 1; i <= count; i++) {
+        const images = [
+            "/images/bookscover/std1term1.jpeg",
+            "/images/bookscover/std1hindi.jpeg",
+            "/images/bookscover/std2sem2.jpeg",
+            "/images/bookscover/std2term2.jpeg",
+            "/images/bookscover/std3sem2.jpeg",
+            "/images/bookscover/std3hindi.jpeg",
+            "/images/bookscover/std3term1.jpeg",
+            "/images/bookscover/std4term2.jpeg"
+        ];
+        const image = images[(i - 1) % images.length];
+
+        list.push({
+            id: `${seriesName.replace(/\s+/g, "-")}-${i}`,
+            title: `${seriesName} - Book ${i}`,
+            image: image,
+            category: seriesName,
+            std: `Grade ${i}`,
+            description: `A comprehensive textbook designed for the ${seriesName} curriculum, focused on conceptual clarity, active learning tools, and standard-aligned exercises.`
+        });
+    }
+    return list;
+};
+
 const NewArrivals = () => {
     const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState<string>("CBSE");
-    const [selectedClass, setSelectedClass] = useState<string>("Std 1");
+    const [selectedCategory, setSelectedCategory] = useState<string>("Core Series");
+    const [selectedSeries, setSelectedSeries] = useState<string>("Wings (S&T)");
     const [selectedBookIndex, setSelectedBookIndex] = useState<number>(0);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -183,63 +280,44 @@ const NewArrivals = () => {
                         id: b._id,
                         title: b.title,
                         image: b.image,
-                        category: b.category || "CBSE",
-                        std: b.std || "Std 1",
+                        category: b.category || "Core Series",
+                        std: b.std || "Grade 1",
                         description: b.description
                     }));
                     setBooks(mapped);
-                } else {
-                    loadFallback();
                 }
             } catch (err) {
-                console.error("Failed to fetch books from API, loading fallback", err);
-                loadFallback();
+                console.error("Failed to fetch books from API", err);
             } finally {
                 setLoading(false);
             }
         };
 
-        const loadFallback = () => {
-            const flat: Book[] = [];
-            Object.entries(staticBookDataFallback).forEach(([std, list]) => {
-                list.forEach((b) => {
-                    flat.push({
-                        id: b.id,
-                        title: b.title,
-                        image: b.image,
-                        category: b.syllabus,
-                        std: std,
-                        description: b.description
-                    });
-                });
-            });
-            setBooks(flat);
-        };
-
         fetchBooks();
     }, []);
 
-    // Get unique categories present in books
-    const categories = Array.from(new Set(books.map(b => b.category)));
-    const displayCategories = categories.length > 0 ? categories : ["CBSE", "ICSE", "State Syllabus"];
-
-    // Filter books by selected category
-    const categoryBooks = books.filter(b => b.category === selectedCategory);
-
-    // Get unique standards under this category
-    const standards = Array.from(new Set(categoryBooks.map(b => b.std))).sort();
-
-    // Filter books by selected category and standard
-    const currentBooks = categoryBooks.filter(b => b.std === selectedClass);
-    const activeBook = currentBooks[selectedBookIndex] || currentBooks[0];
-
-    // Adjust selected standard if selectedCategory changes and the previously selected standard is not available
+    // Adjust selected series when category changes
     useEffect(() => {
-        if (standards.length > 0 && !standards.includes(selectedClass)) {
-            setSelectedClass(standards[0]);
+        const catObj = TEXTBOOK_CATEGORIES.find(c => c.name === selectedCategory);
+        if (catObj && catObj.series.length > 0) {
+            setSelectedSeries(catObj.series[0]);
             setSelectedBookIndex(0);
         }
-    }, [selectedCategory, standards, selectedClass]);
+    }, [selectedCategory]);
+
+    // Reset selected book index when series changes
+    useEffect(() => {
+        setSelectedBookIndex(0);
+    }, [selectedSeries]);
+
+    // Filter books by selected series name
+    const currentBooks = books.filter(b => 
+        b.category.toLowerCase().trim() === selectedSeries.toLowerCase().trim() ||
+        b.title.toLowerCase().includes(selectedSeries.toLowerCase().trim())
+    );
+
+    const displayBooks = currentBooks.length > 0 ? currentBooks : generateFallbackBooksForSeries(selectedSeries);
+    const activeBook = displayBooks[selectedBookIndex] || displayBooks[0];
 
     const getPositionStyle = (idx: number, total: number) => {
         const minLeft = 4;
@@ -264,6 +342,7 @@ const NewArrivals = () => {
                     transform: rotateY(-24deg) rotateX(8deg) translateZ(24px) translateY(-16px);
                     z-index: 30;
                     opacity: 1;
+                    filter: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.45));
                 }
                 .shelf-book.inactive {
                     transform: rotateY(0deg) rotateX(0deg) translateZ(0) translateY(0);
@@ -280,70 +359,61 @@ const NewArrivals = () => {
             <div className="max-w-7xl mx-auto px-6 sm:px-12">
                 {/* Heading */}
                 <div className="text-center mb-12">
-                    <span className="text-xs md:text-sm font-bold tracking-widest text-sky-300 uppercase mb-3 block">Textbook Showcase</span>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                        New <span className="text-sky-300">Arrivals</span>
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tight uppercase">
+                        Textbook <span className="text-sky-300">Showcase</span>
                     </h2>
-                    <p className="text-base md:text-lg text-slate-200 max-w-2xl mx-auto font-light">
-                        Explore our latest publications grouped by curriculum boards and standards.
-                    </p>
+                    
                 </div>
 
-                {/* Category Selection Tabs */}
+                {/* Main Category Selection Tabs */}
                 <div className="flex justify-center flex-wrap gap-3 md:gap-4 mb-6 overflow-x-auto py-2">
-                    {displayCategories.map((cat) => (
+                    {TEXTBOOK_CATEGORIES.map((cat) => (
                         <button
-                            key={cat}
-                            onClick={() => {
-                                setSelectedCategory(cat);
-                                setSelectedBookIndex(0);
-                            }}
+                            key={cat.name}
+                            onClick={() => setSelectedCategory(cat.name)}
                             className={`px-6 py-2.5 rounded-full text-xs font-extrabold tracking-wider uppercase transition-all shrink-0 border ${
-                                selectedCategory === cat
+                                selectedCategory === cat.name
                                     ? "bg-sky-400 text-white border-sky-400 shadow-lg shadow-sky-400/20"
                                     : "bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:text-sky-200"
                             }`}
                         >
-                            {cat}
+                            {cat.name}
                         </button>
                     ))}
                 </div>
 
-                {/* Class Tabs */}
-                <div className="flex justify-center flex-wrap gap-2.5 md:gap-4 mb-16 overflow-x-auto py-2">
-                    {standards.map((cls) => (
+                {/* Sub-tabs: Textbook Series Names */}
+                <div className="flex justify-center flex-wrap gap-2.5 md:gap-3 mb-16 overflow-x-auto py-2 max-w-5xl mx-auto">
+                    {(TEXTBOOK_CATEGORIES.find(c => c.name === selectedCategory)?.series || []).map((seriesName) => (
                         <button
-                            key={cls}
-                            onClick={() => {
-                                setSelectedClass(cls);
-                                setSelectedBookIndex(0);
-                            }}
+                            key={seriesName}
+                            onClick={() => setSelectedSeries(seriesName)}
                             className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all shrink-0 border ${
-                                selectedClass === cls
+                                selectedSeries === seriesName
                                     ? "bg-white text-blue-900 border-white shadow-md shadow-white/10"
                                     : "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
                             }`}
                         >
-                            {cls}
+                            {seriesName}
                         </button>
                     ))}
                 </div>
 
                 {/* Display Grid (Split Details & Animated Bookshelf) */}
-                {currentBooks.length > 0 && activeBook ? (
+                {displayBooks.length > 0 && activeBook ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center max-w-6xl mx-auto">
                         {/* Left side: Book details */}
                         <div className="flex flex-col text-left space-y-6 md:pr-8">
                             <div className="flex items-center gap-2">
                                 <span className="px-3 py-1.5 rounded-full bg-sky-500/20 text-sky-300 font-bold text-xs uppercase tracking-wider border border-sky-400/20">
-                                    {selectedClass}
+                                    {selectedSeries}
                                 </span>
                                 <span className="px-3 py-1.5 rounded-full bg-white/10 text-slate-200 font-semibold text-xs uppercase tracking-wider">
-                                    {activeBook.category}
+                                    {activeBook.std}
                                 </span>
                             </div>
                             <h3 className="text-2xl sm:text-4xl font-extrabold text-white leading-tight transition-all duration-300">
-                                {selectedClass} - {activeBook.title}
+                                {activeBook.title}
                             </h3>
                             <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-light min-h-[80px]">
                                 {activeBook.description}
@@ -362,7 +432,7 @@ const NewArrivals = () => {
                         <div className="book-shelf-container relative w-full h-[220px] sm:h-[280px] md:h-[340px] flex flex-col justify-end">
                             {/* Books Wrapper */}
                             <div className="relative w-full h-full" style={{ perspective: "1000px", transformStyle: "preserve-3d" }}>
-                                {currentBooks.map((book, idx) => {
+                                {displayBooks.map((book, idx) => {
                                     const isActive = selectedBookIndex === idx;
                                     const isHovered = hoveredIndex === idx;
                                     return (
@@ -372,7 +442,7 @@ const NewArrivals = () => {
                                             onMouseEnter={() => setHoveredIndex(idx)}
                                             onMouseLeave={() => setHoveredIndex(null)}
                                             style={{
-                                                ...getPositionStyle(idx, currentBooks.length),
+                                                ...getPositionStyle(idx, displayBooks.length),
                                                 transform: isActive 
                                                     ? "translateY(-16px) scale(1.08)"
                                                     : isHovered
@@ -442,7 +512,7 @@ const NewArrivals = () => {
                     </div>
                 ) : (
                     <div className="text-center py-20">
-                        <p className="text-slate-300 text-lg font-light">No books available for this board & class selection.</p>
+                        <p className="text-slate-300 text-lg font-light">No books available for this selection.</p>
                     </div>
                 )}
             </div>

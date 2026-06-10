@@ -25,8 +25,8 @@ const Header = () => {
         About: [
             { name: 'Overview', path: '/about' },
             { name: 'Quality', path: '/about/quality' },
-            { name: 'Our Journey', path: '/#homepage-roadmap' },
-            { name: 'FAQ', path: '/contact' },
+            { name: 'Our Journey', path: '/about/journey' },
+            { name: 'FAQ', path: '/about/faq' },
         ],
     };
     // bg-[#8d3072]

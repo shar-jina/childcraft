@@ -4,23 +4,48 @@ import React, { useEffect, useState, useRef } from "react";
 const milestones = [
     {
         year: "2014",
-        title: "The Inception",
-        desc: "Child Craft Hallmark Publishers was founded in May 2014 with a vision to create meaningful educational resources that inspire learning and nurture creativity.",
+        title: "The Beginning",
+        desc: "Child Craft Hallmark Publishers was founded under the visionary leadership of Mr. V. A. Vishwanathan and Mrs. Reena Vishwanathan. The foundation was laid with a commitment to provide quality educational resources for schools and learners.",
+    },
+    {
+        year: "2015",
+        title: "Building Academic Foundations",
+        desc: "Focused on developing curriculum-oriented educational materials and establishing strong relationships with schools and educators across India.",
     },
     {
         year: "2018",
-        title: "Academic Leadership",
-        desc: "Strengthened by Director Mrs. Reena Vishwanathan's 20+ years of expertise spanning content development, book design, teacher training, and academic administration.",
+        title: "Teacher-Centric Growth",
+        desc: "Initiated academic support programmes and teacher interaction initiatives aimed at improving classroom effectiveness and learning outcomes.",
+    },
+    {
+        year: "2019",
+        title: "Diversification of Publications",
+        desc: "Expanded publication portfolio with subject-specific resources, supplementary learning materials, and innovative educational tools.",
+    },
+    {
+        year: "2021",
+        title: "Digital Transformation",
+        desc: "Expanded digital initiatives, educational support systems, and technology-assisted learning resources to complement classroom teaching.",
     },
     {
         year: "2022",
-        title: "Publishing Legacy",
-        desc: "Guided by Managing Director Mr. V. A. Vishwanathan's 40+ years of extensive experience in educational publishing, establishing a strong foundation of trust.",
+        title: "Academic Excellence",
+        desc: "Strengthened curriculum alignment and introduced enhanced educational solutions that promoted critical thinking and skill development.",
+    },
+    {
+        year: "2024",
+        title: "Empowering Educators",
+        desc: "Increased emphasis on teacher training programmes, professional development sessions, and academic enrichment activities.",
+    },
+    {
+        year: "2025",
+        title: "Product Development & Brand Expansion",
+        desc: "Advanced the development of new educational series, strengthened academic teams, enhanced design quality, and expanded publishing capabilities.",
     },
     {
         year: "2026",
-        title: "12 Years of Service",
-        desc: "Proudly completing twelve years of dedicated service, continually evolving to meet the changing needs of schools, educators, and young learners.",
+        title: "Shaping the Future of Learning",
+        desc: "Child Craft Hallmark Publishers envisions a future where innovation, technology, and learner-centric education come together to create smarter classrooms, empowered educators, and future-ready learners across India.",
     },
 ];
 

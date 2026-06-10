@@ -31,6 +31,67 @@ interface BookItem {
   index: number;
 }
 
+const TEXTBOOK_CATEGORIES = [
+  {
+    name: "Core Series",
+    series: [
+      "Wings (S&T)",
+      "Pearls & Petals (S&T)",
+      "Nexus (T)",
+      "Nexus Plus (T)",
+      "Next Generation (T)",
+      "Golden Wings (T)",
+      "Green Planet"
+    ]
+  },
+  {
+    name: "Languages",
+    series: [
+      "Manjadi",
+      "Malayala Manjari",
+      "Basha Tarang",
+      "Lipi Sagaram",
+      "Hindi Praveshika",
+      "Sarovar 1-5",
+      "Madhuri Hindi Reader"
+    ]
+  },
+  {
+    name: "Grammar & English",
+    series: [
+      "Active Grammar 1-8",
+      "Basic Grammar",
+      "Graded English",
+      "Active English (Reader)"
+    ]
+  },
+  {
+    name: "Computers & GK",
+    series: [
+      "IT Exploring e-World",
+      "Smart Computer",
+      "World of Computer",
+      "GK - Fun & Facts",
+      "GK – Explore the World"
+    ]
+  },
+  {
+    name: "Writing & Art",
+    series: [
+      "Fun with Crayon",
+      "Sulekh Mala Handwriting",
+      "Vivanta",
+      "Capital and Small Letters",
+      "Magic of Art",
+      "Cursive Writing",
+      "Draw & Colour",
+      "Art & Activity",
+      "ABC Writing Capital and Small",
+      "Aalekhanamithram - Malayalam Writing"
+    ]
+  }
+];
+
 // Mock data for Book outline management (since it is static in frontend)
 interface BookOutlineItem {
   id: number;
@@ -52,7 +113,7 @@ interface EnquiryItem {
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"overview" | "banners" | "offers" | "textbooks" | "positions">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "banners" | "offers" | "textbooks" | "positions" | "book-series">("overview");
 
   // Common states
   const [loading, setLoading] = useState(true);
@@ -83,8 +144,11 @@ export default function AdminDashboardPage() {
   const [editingBook, setEditingBook] = useState<BookItem | null>(null);
   const [bookTitle, setBookTitle] = useState("");
   const [bookImageUrl, setBookImageUrl] = useState("");
-  const [bookCategory, setBookCategory] = useState("CBSE");
-  const [bookStd, setBookStd] = useState("Std 1");
+  const [categoryGroup, setCategoryGroup] = useState("Core Series");
+  const [bookCategory, setBookCategory] = useState("Wings (S&T)");
+  const [customCategoryGroup, setCustomCategoryGroup] = useState("");
+  const [customBookCategory, setCustomBookCategory] = useState("");
+  const [bookStd, setBookStd] = useState("Grade 1");
   const [bookDescription, setBookDescription] = useState("");
   const [bookIndex, setBookIndex] = useState(0);
   const [bookSaving, setBookSaving] = useState(false);
@@ -94,6 +158,16 @@ export default function AdminDashboardPage() {
 
   const [filterCategory, setFilterCategory] = useState("All");
   const [filterStd, setFilterStd] = useState("All");
+
+  // Keep bookCategory in sync with categoryGroup if the selected group changes
+  useEffect(() => {
+    const group = TEXTBOOK_CATEGORIES.find(g => g.name === categoryGroup);
+    if (group && group.series.length > 0) {
+      if (!group.series.includes(bookCategory)) {
+        setBookCategory(group.series[0]);
+      }
+    }
+  }, [categoryGroup]);
 
   const filteredBooks = showcaseBooks.filter((book) => {
     const catMatch = filterCategory === "All" || book.category === filterCategory;
@@ -126,7 +200,7 @@ export default function AdminDashboardPage() {
 
   // Outlines state (Mock)
   const [bookOutlines, setBookOutlines] = useState<BookOutlineItem[]>([
-    { id: 1, text: "Colorful and attractive", color: "bg-green-600" },
+    { id: 1, text: "Colourful and attractive", color: "bg-green-600" },
     { id: 2, text: "Clear, Simple and Precise", color: "bg-orange-500" },
     { id: 3, text: "Activity based worksheets and assessments", color: "bg-rose-500" },
     { id: 4, text: "Concepts are supported by suitable examples", color: "bg-blue-600" },
@@ -158,6 +232,30 @@ export default function AdminDashboardPage() {
       createdAt: new Date(Date.now() - 3600000 * 24 * 3).toISOString() // 3 days ago
     }
   ]);
+
+  // Book Series Outline states
+  interface BookSeriesItem {
+    _id: string;
+    name: string;
+    label: string;
+    classes: string;
+    gradient: string;
+    image: string;
+    index: number;
+  }
+  const [bookSeriesList, setBookSeriesList] = useState<BookSeriesItem[]>([]);
+  const [showSeriesForm, setShowSeriesForm] = useState(false);
+  const [editingSeries, setEditingSeries] = useState<BookSeriesItem | null>(null);
+  const [seriesName, setSeriesName] = useState("");
+  const [seriesLabel, setSeriesLabel] = useState("");
+  const [seriesClasses, setSeriesClasses] = useState("");
+  const [seriesGradient, setSeriesGradient] = useState("from-blue-600 to-indigo-700");
+  const [seriesImageUrl, setSeriesImageUrl] = useState("");
+  const [seriesIndex, setSeriesIndex] = useState(0);
+  const [seriesSaving, setSeriesSaving] = useState(false);
+  const [seriesUploadMode, setSeriesUploadMode] = useState<"link" | "file">("link");
+  const [seriesUploadingFile, setSeriesUploadingFile] = useState(false);
+  const [seriesUploadError, setSeriesUploadError] = useState<string | null>(null);
 
   const fetchBanners = async () => {
     try {
@@ -213,6 +311,19 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const fetchBookSeries = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/book-outlines`);
+      if (res.ok) {
+        const data = await res.json();
+        const sorted = data.sort((a: BookSeriesItem, b: BookSeriesItem) => a.index - b.index);
+        setBookSeriesList(sorted);
+      }
+    } catch (err) {
+      console.error("Error fetching book outlines:", err);
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("adminToken");
     if (!token) {
@@ -222,7 +333,13 @@ export default function AdminDashboardPage() {
 
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchBanners(), fetchOffers(), fetchBooks(), fetchPositions()]);
+      await Promise.all([
+        fetchBanners(), 
+        fetchOffers(), 
+        fetchBooks(), 
+        fetchPositions(),
+        fetchBookSeries()
+      ]);
       setLoading(false);
     };
 
@@ -535,10 +652,12 @@ export default function AdminDashboardPage() {
     setMessage(null);
     const token = localStorage.getItem("adminToken");
 
+    const finalCategory = bookCategory === "custom" ? customBookCategory : bookCategory;
+
     const payload = {
       title: bookTitle,
       image: bookImageUrl,
-      category: bookCategory,
+      category: finalCategory,
       std: bookStd,
       description: bookDescription,
       index: bookIndex,
@@ -627,7 +746,17 @@ export default function AdminDashboardPage() {
     setEditingBook(book);
     setBookTitle(book.title);
     setBookImageUrl(book.image);
-    setBookCategory(book.category);
+    const catGroup = TEXTBOOK_CATEGORIES.find(c => c.series.includes(book.category))?.name;
+    if (catGroup) {
+      setCategoryGroup(catGroup);
+      setBookCategory(book.category);
+      setCustomBookCategory("");
+    } else {
+      setCategoryGroup("custom");
+      setCustomCategoryGroup("Other");
+      setBookCategory("custom");
+      setCustomBookCategory(book.category);
+    }
     setBookStd(book.std);
     setBookDescription(book.description);
     setBookIndex(book.index);
@@ -666,8 +795,11 @@ export default function AdminDashboardPage() {
     setEditingBook(null);
     setBookTitle("");
     setBookImageUrl("");
-    setBookCategory("CBSE");
-    setBookStd("Std 1");
+    setCategoryGroup("Core Series");
+    setBookCategory("Wings (S&T)");
+    setCustomCategoryGroup("");
+    setCustomBookCategory("");
+    setBookStd("Grade 1");
     setBookDescription("");
     setBookIndex(0);
     setBookUploadMode("link");
@@ -750,6 +882,147 @@ export default function AdminDashboardPage() {
     setPosDescription("");
     setPosRequirementsText("");
     setShowPositionForm(false);
+  };
+
+  // Book Series Outlines handlers
+  const handleSeriesSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSeriesSaving(true);
+    setMessage(null);
+    const token = localStorage.getItem("adminToken");
+
+    const bodyData = {
+      name: seriesName,
+      label: seriesLabel,
+      classes: seriesClasses,
+      gradient: seriesGradient,
+      image: seriesImageUrl,
+      index: Number(seriesIndex),
+    };
+
+    try {
+      const url = editingSeries 
+        ? `${API_BASE_URL}/api/book-outlines/${editingSeries._id}`
+        : `${API_BASE_URL}/api/book-outlines`;
+      const method = editingSeries ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(bodyData),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setMessage({ 
+          type: "success", 
+          text: editingSeries ? "Book series updated successfully!" : "Book series created successfully!" 
+        });
+        resetSeriesForm();
+        await fetchBookSeries();
+      } else {
+        setMessage({ type: "error", text: data.message || "Failed to save book series." });
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage({ type: "error", text: "Error saving book series." });
+    } finally {
+      setSeriesSaving(false);
+    }
+  };
+
+  const handleEditSeries = (series: BookSeriesItem) => {
+    setEditingSeries(series);
+    setSeriesName(series.name);
+    setSeriesLabel(series.label);
+    setSeriesClasses(series.classes);
+    setSeriesGradient(series.gradient);
+    setSeriesImageUrl(series.image || "");
+    setSeriesIndex(series.index);
+    setSeriesUploadMode("link");
+    setShowSeriesForm(true);
+    
+    // Scroll to form
+    setTimeout(() => {
+      document.getElementById("series-form-anchor")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
+  const handleDeleteSeries = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this book series outline?")) return;
+    const token = localStorage.getItem("adminToken");
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/book-outlines/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setMessage({ type: "success", text: "Book series deleted successfully!" });
+        await fetchBookSeries();
+      } else {
+        setMessage({ type: "error", text: "Failed to delete book series." });
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage({ type: "error", text: "Error deleting book series." });
+    }
+  };
+
+  const handleSeriesFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSeriesUploadingFile(true);
+    setSeriesUploadError(null);
+    setMessage(null);
+
+    const token = localStorage.getItem("adminToken");
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setSeriesImageUrl(data.url);
+        setMessage({ type: "success", text: "Image uploaded successfully!" });
+      } else {
+        setSeriesUploadError(data.message || "Failed to upload image.");
+        setMessage({ type: "error", text: data.message || "Failed to upload image." });
+      }
+    } catch (err) {
+      console.error(err);
+      setSeriesUploadError("Error uploading file to server.");
+      setMessage({ type: "error", text: "Error uploading file to server." });
+    } finally {
+      setSeriesUploadingFile(false);
+    }
+  };
+
+  const resetSeriesForm = () => {
+    setEditingSeries(null);
+    setSeriesName("");
+    setSeriesLabel("");
+    setSeriesClasses("");
+    setSeriesGradient("from-blue-600 to-indigo-700");
+    setSeriesImageUrl("");
+    setSeriesIndex(0);
+    setSeriesUploadMode("link");
+    setSeriesUploadError(null);
+    setShowSeriesForm(false);
   };
 
   if (loading) {
@@ -869,6 +1142,21 @@ export default function AdminDashboardPage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 .621-.504 1.125-1.125 1.125H4.875A1.125 1.125 0 013.75 18.4V14.15m16.5 0c0-1.242-1.008-2.25-2.25-2.25H5.625c-1.242 0-2.25 1.008-2.25 2.25m16.5 0V7.5a2.25 2.25 0 00-2.25-2.25H5.625a2.25 2.25 0 00-2.25 2.25v6.65m14.25-6.65v11.75" />
             </svg>
             Career Positions
+          </button>
+
+          {/* Book Series Outlines Tab Button */}
+          <button
+            onClick={() => { setActiveTab("book-series"); setMessage(null); }}
+            className={`w-full text-left px-4 py-3 rounded-xl text-xs font-bold transition-all flex items-center gap-3 ${
+              activeTab === "book-series"
+                ? "bg-primary text-white shadow-md shadow-primary/20"
+                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+            }`}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4.5 h-4.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+            Book Series Outlines
           </button>
         </aside>
 
@@ -1464,7 +1752,7 @@ export default function AdminDashboardPage() {
                     {editingBook ? "Edit Textbook Details" : "Add New Textbook to Showcase"}
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="space-y-1">
                       <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
                         Book Title
@@ -1474,47 +1762,107 @@ export default function AdminDashboardPage() {
                         required
                         value={bookTitle}
                         onChange={(e) => setBookTitle(e.target.value)}
-                        placeholder="e.g. English Reader, Mathematics"
+                        placeholder="e.g. Wings Grade 1, Pearls Book 1"
                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800"
                       />
                     </div>
 
                     <div className="space-y-1">
                       <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
-                        Category / Syllabus
+                        Category Group
+                      </label>
+                      <select
+                        value={categoryGroup}
+                        onChange={(e) => {
+                          setCategoryGroup(e.target.value);
+                          if (e.target.value === "custom") {
+                            setBookCategory("custom");
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800"
+                      >
+                        {TEXTBOOK_CATEGORIES.map(cat => (
+                          <option key={cat.name} value={cat.name}>{cat.name}</option>
+                        ))}
+                        <option value="custom">Other / Custom Category...</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
+                        Textbook Series Name
                       </label>
                       <select
                         value={bookCategory}
                         onChange={(e) => setBookCategory(e.target.value)}
                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800"
                       >
-                        <option value="CBSE">CBSE</option>
-                        <option value="ICSE">ICSE</option>
-                        <option value="State Syllabus">State Syllabus</option>
-                        <option value="General">General / Others</option>
+                        {categoryGroup !== "custom" && (TEXTBOOK_CATEGORIES.find(c => c.name === categoryGroup)?.series || []).map(seriesName => (
+                          <option key={seriesName} value={seriesName}>{seriesName}</option>
+                        ))}
+                        <option value="custom">Other / Custom Series Name...</option>
                       </select>
                     </div>
 
                     <div className="space-y-1">
                       <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
-                        Standard / Class
+                        Grade / Level
                       </label>
                       <select
                         value={bookStd}
                         onChange={(e) => setBookStd(e.target.value)}
                         className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800"
                       >
-                        <option value="Std 1">Std 1</option>
-                        <option value="Std 2">Std 2</option>
-                        <option value="Std 3">Std 3</option>
-                        <option value="Std 4">Std 4</option>
-                        <option value="Std 5">Std 5</option>
-                        <option value="Std 6">Std 6</option>
-                        <option value="Std 7">Std 7</option>
-                        <option value="Std 8">Std 8</option>
+                        <option value="Grade 1">Grade 1</option>
+                        <option value="Grade 2">Grade 2</option>
+                        <option value="Grade 3">Grade 3</option>
+                        <option value="Grade 4">Grade 4</option>
+                        <option value="Grade 5">Grade 5</option>
+                        <option value="Grade 6">Grade 6</option>
+                        <option value="Grade 7">Grade 7</option>
+                        <option value="Grade 8">Grade 8</option>
+                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="General">General</option>
                       </select>
                     </div>
                   </div>
+
+                  {/* Conditionally display custom inputs if "custom" is selected */}
+                  {(categoryGroup === "custom" || bookCategory === "custom") && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-2xl border border-slate-150">
+                      {categoryGroup === "custom" && (
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
+                            Custom Category Group Title
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={customCategoryGroup}
+                            onChange={(e) => setCustomCategoryGroup(e.target.value)}
+                            placeholder="e.g. Higher Secondary, Pre-Primary"
+                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800"
+                          />
+                        </div>
+                      )}
+
+                      {bookCategory === "custom" && (
+                        <div className="space-y-1">
+                          <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
+                            Custom Textbook Series Name
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={customBookCategory}
+                            onChange={(e) => setCustomBookCategory(e.target.value)}
+                            placeholder="e.g. Explore the World, Fun Maths"
+                            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
@@ -1946,6 +2294,178 @@ export default function AdminDashboardPage() {
                     </table>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 8: BOOK SERIES OUTLINES */}
+          {activeTab === "book-series" && (
+            <div className="space-y-8 animate-fade-in">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                  <h2 className="text-2xl font-extrabold text-slate-800 tracking-tight">Book Series Outlines</h2>
+                  <p className="text-slate-500 text-xs mt-1">
+                    Manage the featured book series outlines shown on the homepage book section.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    if (showSeriesForm) {
+                      resetSeriesForm();
+                    } else {
+                      setShowSeriesForm(true);
+                    }
+                  }}
+                  className="px-4 py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-bold rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+                >
+                  {showSeriesForm ? "Cancel" : "+ Add New Series"}
+                </button>
+              </div>
+
+              {/* Series Create/Edit Form */}
+              {showSeriesForm && (
+                <form
+                  id="series-form-anchor"
+                  onSubmit={handleSeriesSubmit}
+                  className="bg-white rounded-3xl p-6 border border-slate-150 shadow-xs space-y-6 max-w-4xl"
+                >
+                  <h3 className="text-sm font-extrabold text-slate-800">
+                    {editingSeries ? "Edit Book Outline Image" : "Add New Book Outline Image"}
+                  </h3>
+
+                  <div className="grid grid-cols-1 gap-6">
+                    <div className="space-y-1">
+                      <label className="text-xs font-bold uppercase text-slate-650 tracking-wider block">
+                        Order Index (Sorting Position)
+                      </label>
+                      <input
+                        type="number"
+                        value={seriesIndex}
+                        onChange={(e) => setSeriesIndex(Number(e.target.value))}
+                        className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800 font-medium"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Upload Image Section */}
+                  <div className="space-y-3 p-4 bg-slate-50/50 rounded-2xl border border-slate-150">
+                    <div className="flex border-b border-slate-200 pb-2 mb-2 gap-4">
+                      <button
+                        type="button"
+                        onClick={() => setSeriesUploadMode("link")}
+                        className={`pb-1 text-xs font-bold transition-all border-b-2 ${
+                          seriesUploadMode === "link" ? "border-primary text-primary" : "border-transparent text-slate-400 hover:text-slate-600"
+                        }`}
+                      >
+                        Image Link / Path
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSeriesUploadMode("file")}
+                        className={`pb-1 text-xs font-bold transition-all border-b-2 ${
+                          seriesUploadMode === "file" ? "border-primary text-primary" : "border-transparent text-slate-400 hover:text-slate-650"
+                        }`}
+                      >
+                        Upload Image (Cloudinary)
+                      </button>
+                    </div>
+
+                    {seriesUploadMode === "link" ? (
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">Image Path / URL</label>
+                        <input
+                          type="text"
+                          required
+                          value={seriesImageUrl}
+                          onChange={(e) => setSeriesImageUrl(e.target.value)}
+                          placeholder="e.g. /images/bookscover/newseries.jpg or Cloudinary URL"
+                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all text-xs text-slate-800 font-mono"
+                        />
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleSeriesFileUpload}
+                          disabled={seriesUploadingFile}
+                          className="text-xs text-slate-600 file:mr-4 file:py-1.5 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 file:transition-all"
+                        />
+                        {seriesUploadingFile && (
+                          <div className="text-xs text-primary font-bold animate-pulse flex items-center gap-1.5">
+                            Uploading to Cloudinary...
+                          </div>
+                        )}
+                        {seriesUploadError && (
+                          <div className="text-xs text-rose-600 font-bold">{seriesUploadError}</div>
+                        )}
+                      </div>
+                    )}
+
+                    {seriesImageUrl && (
+                      <div className="flex items-center gap-3 mt-2 bg-white p-2.5 rounded-xl border border-slate-150">
+                        <div className="w-12 h-12 relative rounded-lg overflow-hidden bg-slate-100 shrink-0">
+                          <img src={seriesImageUrl} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="text-[9px] font-mono text-slate-500 truncate select-all">{seriesImageUrl}</div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="submit"
+                      disabled={seriesSaving}
+                      className="px-5 py-2.5 bg-primary hover:bg-primary-hover disabled:bg-slate-200 text-white font-bold text-xs rounded-xl shadow-xs transition-all"
+                    >
+                      {seriesSaving ? "Saving..." : editingSeries ? "Save Changes" : "Create Book Outline"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={resetSeriesForm}
+                      className="px-5 py-2.5 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl transition-all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* Grid of Series Outlines */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {bookSeriesList.map((series) => (
+                  <div
+                    key={series._id}
+                    className="bg-white rounded-3xl border border-slate-150 shadow-xs overflow-hidden flex flex-col justify-between"
+                  >
+                    {/* Visual Card Preview */}
+                    <div className="p-4 bg-slate-55 flex items-center justify-center min-h-[220px] relative overflow-hidden bg-slate-50 border-b border-slate-100">
+                      {series.image ? (
+                        <img src={series.image} className="max-h-[190px] object-contain rounded-lg shadow-md" />
+                      ) : (
+                        <span className="text-slate-400 text-xs font-semibold">No Image Uploaded</span>
+                      )}
+                      <div className="absolute top-2 right-2 bg-white/80 backdrop-blur-xs px-2.5 py-0.5 rounded-full text-[10px] text-slate-700 font-bold border border-slate-200">
+                        Index: {series.index}
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 flex items-center justify-between gap-3">
+                      <button
+                        onClick={() => handleEditSeries(series)}
+                        className="flex-1 py-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteSeries(series._id)}
+                        className="flex-1 py-2 bg-rose-50 hover:bg-rose-100/80 border border-rose-100 hover:border-rose-200 text-rose-600 font-bold text-xs rounded-xl transition-all"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}

@@ -86,6 +86,21 @@ const ContactPage = () => {
                                         </p>
                                     </div>
                                 </div>
+
+                                {/* Instagram */}
+                                <div className="flex items-start gap-4 md:gap-5 group">
+                                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-bg flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 md:w-6 md:h-6 text-primary">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 5.25h.008v.008h-.008V5.25Zm-3 13.5H8.25A5.25 5.25 0 0 1 3 13.5V8.25A5.25 5.25 0 0 1 8.25 3h7.5a5.25 5.25 0 0 1 5.25 5.25v5.25a5.25 5.25 0 0 1-5.25 5.25Z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-gray-900 font-semibold mb-1 text-sm md:text-base">Instagram</h3>
+                                        <p className="text-gray-650 font-medium hover:text-primary transition-colors text-sm md:text-base">
+                                            <a href="https://instagram.com/childcraftbooks" target="_blank" rel="noopener noreferrer">@childcraftbooks</a>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

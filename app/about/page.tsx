@@ -17,8 +17,8 @@ export default function AboutPage() {
                     <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                         Childcraft Hallmark Publishers
                     </h1>
-                    <p className="text-sm md:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        To be a leading educational publishing organization that inspires young minds through innovative, engaging, and learner-centered resources, fostering a lifelong love for learning and empowering future generations.
+                    <p className="text-sm md:text-lg text-gray-650 max-w-3xl mx-auto leading-relaxed">
+                        Child Craft Hallmark Publishers is a distinguished educational publishing organisation dedicated to creating high quality learning resources for children, educators, and schools across India. With a commitment to academic excellence, creativity, and innovation, we develop learner centred educational solutions that inspire curiosity, foster confidence, and support holistic development. Through thoughtfully crafted publications, teacher training initiatives, and academic support programs, we strive to make learning meaningful, engaging, and future ready for every child.
                     </p>
                 </div>
             </section>
@@ -68,7 +68,7 @@ export default function AboutPage() {
                                 <div className="inline-block px-3 py-1 md:px-4 md:py-1.5 rounded-full bg-pink-500/20 text-pink-300 font-semibold text-xs md:text-sm mb-4 md:mb-6 uppercase tracking-wider">
                                     Our Mission
                                 </div>
-                                <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">A Joyful Journey</h2>
+                                <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6">Empower. Innovate. Excel.</h2>
                                 <p className="text-slate-300 text-base md:text-lg leading-relaxed">
                                     To create high quality educational resources that combine academic excellence, creativity, and innovation while supporting schools, educators, and learners through meaningful learning experiences. We are committed to nurturing essential 21st century skills, promoting holistic development, and empowering children to become confident, responsible, and future-ready individuals.
                                 </p>
@@ -85,8 +85,8 @@ export default function AboutPage() {
                     <h3 className="text-2xl md:text-4xl font-bold text-gray-900 mb-8 md:mb-12">Our Services</h3>
 
                     <div className="max-w-4xl mx-auto bg-green-50 rounded-3xl p-6 md:p-12 border border-green-100 shadow-sm">
-                        <p className="text-sm md:text-xl text-gray-700 leading-relaxed font-medium">
-                            We are dedicated to supporting schools, educators, and learners through a comprehensive range of solutions. Our offerings include premium textbook publishing, expansive support materials tailored for teachers, as well as hands-on workshops and specialized training programs designed to elevate the classroom experience.
+                        <p className="text-sm md:text-xl text-gray-755 leading-relaxed font-medium">
+                            We develop high-quality educational resources that promote academic excellence, conceptual understanding, and holistic learning. Our comprehensive range of curriculum-aligned textbooks, learning materials, assessments, and teacher-support resources is designed to enhance classroom instruction and student achievement. Through innovative content and pedagogical excellence, we empower schools, educators, and learners to thrive in an evolving educational landscape.
                         </p>
                     </div>
                 </div>
@@ -120,7 +120,7 @@ export default function AboutPage() {
                                 </div>
                                 <FaQuoteLeft className="text-xl md:text-2xl text-pink-500/30 mb-2 md:mb-3 mx-auto md:mx-0" />
                                 <p className="text-slate-300 text-xs md:text-base leading-relaxed italic font-serif mb-4">
-                                    "Education is the most powerful weapon which you can use to change the world. At Childcraft Hallmark Publishers, we don't just print books; we craft gateways to imagination, understanding, and the future. Our commitment to excellence is a promise to the next generation."
+                                    "Education is the foundation upon which every great future is built. Our mission is to create learning resources that inspire excellence, innovation, and lifelong learning."
                                 </p>
                                 <div>
                                     <h4 className="font-bold text-white text-base md:text-lg">Mr. V. A. Vishwanathan</h4>
@@ -153,7 +153,7 @@ export default function AboutPage() {
                                 </div>
                                 <FaQuoteLeft className="text-xl md:text-2xl text-pink-500/30 mb-2 md:mb-3 mx-auto md:mx-0" />
                                 <p className="text-slate-300 text-xs md:text-base leading-relaxed italic font-serif mb-4">
-                                    "Our mission is to create a dynamic learning ecosystem that bridges the gap between traditional curriculum and modern creative pedagogy. By equipping teachers and engaging children, we ensure that education remains an active, joyful journey of discovery."
+                                    "Every child carries limitless potential. Our responsibility is to provide the right guidance, resources, and inspiration that transform curiosity into knowledge and knowledge into excellence."
                                 </p>
                                 <div>
                                     <h4 className="font-bold text-white text-base md:text-lg">Mrs. Reena Vishwanathan</h4>
